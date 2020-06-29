@@ -4,11 +4,11 @@ import 'package:flame/flame.dart';
 import 'package:grey_silence/game.dart';
 
 void main() async {
-  await Flame.util.fullScreen();
+  WidgetsFlutterBinding.ensureInitialized();
   await Flame.util.setLandscape();
-  final screenSize = await Flame.util.initialDimensions();
+  await Flame.util.fullScreen();
 
-  final game = GSGame(screenSize);
+  final game = GsGame();
   runApp(game.widget);
 }
 

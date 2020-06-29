@@ -1,76 +1,67 @@
-import 'package:flutter/material.dart';
 import 'package:flame/components/component.dart';
-import 'package:flame/game/base_game.dart';
+import 'package:flutter/material.dart';
 import 'package:flame/gestures.dart';
 
+import 'package:grey_silence/src/background.dart';
+import 'package:grey_silence/src/objects.dart';
 import 'package:grey_silence/src/player.dart';
+import 'package:grey_silence/src/state.dart';
+import 'package:grey_silence/src/ui.dart';
 
-class GSGame extends BaseGame with TapDetector {
-  static final _white = Paint()..color = Color(0xFFFFFFFF);
-  static final _darkGrey = Paint()..color = Color(0xFF333333);
-
+class GsGame extends GameWithState with TapDetector {
+  GsState state;
   Player player;
+  Background bg;
+  Scoreboard scoreboard;
+  ObjectsController gemController;
 
-  GSGame(Size screenSize) {
-    size = screenSize;
-
-    init();
+  GsGame() {
+    state = GsState();
+    add(bg = Background());
+    add(gemController = ObjectsController());
+    add(player = Player());
+    add(scoreboard = Scoreboard());
   }
 
   @override
-  void onTapDown(TapDownDetails details) {
-    if (details.globalPosition.dx >= size.width / 2) {
-      player.moveRight();
-    } else {
-      player.moveLeft();
+  void resize(Size size) {
+    state.setTileSize(size.height);
+    super.resize(size);
+  }
+
+  @override
+  void onTapUp(details) {
+    switch (state.mode) {
+      case GsMode.start:
+        player.run();
+        break;
+      case GsMode.playing:
+        player.flip();
+        break;
+      case GsMode.gameOver:
+        state.reset();
+        player.getUp();
+        break;
     }
   }
 
   @override
-  void onTapUp(TapUpDetails details) {
-    player.stopMoving();
+  void endGame() {
+    player.die();
   }
 
-  void init() {
-    add(
-      StaticComponent()
-      ..x = 50
-      ..y = size.height - 120
-      ..width = size.width * 2
-      ..height = 100
-      ..paint = _white
-    );
-    
-    for (int i = 1; i < 6; i++) {
-      add(
-        StaticComponent()
-        ..x = 250.0 * i
-        ..y = size.height - 220
-        ..width = 100
-        ..height = 100
-        ..paint = _darkGrey
-      );
+  @override
+  void update(double t) {
+    if (state.mode.nowPlaying) {
+      camera.x += t * state.speed;
+      state.setDistanceRunFromCamera(camera.x);
+      state.checkCondition();
     }
-    
-    add(
-      player = Player(this)
-      ..x = 100
-      ..y = size.height - 220
-      ..width = 50
-      ..height = 100
-    );
+    super.update(t);
   }
-}
-
-class StaticComponent extends PositionComponent {
-  Paint paint;
 
   @override
-  void update(double dt) {}
-
-  @override
-  void render(Canvas canvas) {
-    canvas.drawRect(toRect(), paint);
+  bool playerCollisionWith(PositionComponent c) {
+    return player.distance(c) < player.width / 2;
   }
 }
-

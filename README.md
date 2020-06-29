@@ -1,16 +1,19 @@
 # Grey Silence
 
-Bring back the sound and colour to this endless runner world!
+[Insert evil overlord]'s turrets have stolen the sound and colour from this endless runner world! Keep collecting gems to bring them back - hit a turret and you'll die though.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+I wasn't able to get round to the audio 😅 But the colour works. Basically the longer you run/the higher you score, the more colour comes back into the world.
 
-A few resources to get you started if this is your first Flutter project:
+A screenshot:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+![Screenshot of Grey Silence](showcase/screenshot.jpg)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Some gameplay:
+
+![Gameplay gif](showcase/gameplay.gif)
+
+## Attributions
+
+Pretty much all assets used are CC-licensed - I am collating the attributions and will add them here
